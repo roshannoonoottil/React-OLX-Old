@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import Logo from '../../olx-logo.png';
 import './Signup.css';
-import { FirebaseContext } from '../../store/FirebaseContext';  
+import { FirebaseContext } from '../../store/Context';  
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
 export default function Signup() {
 
   const history = useHistory()
-  const [userName, setUserName] = useState(''); 
+  const [username, setUserName] = useState(''); 
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -18,13 +18,15 @@ export default function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     firebase.auth().createUserWithEmailAndPassword(email,password).then((result=>{
-      result.user.updateProfile({displayName:userName}).then(()=>{
+      result.user.updateProfile({displayName:username}).then(()=>{
         firebase.firestore().collection('user').add({
           id:result.user.uid,
-          userName:userName,
+          userName:username,
           phone:phone
         }).then(()=>{
           history.push("/login")
+        }).catch((error)=>{
+          alert(error.message)
         })
       })
     }))
@@ -43,7 +45,7 @@ export default function Signup() {
           <input
             className="input"
             type="text"
-            value={userName}
+            value={username}
             onChange={(e) => setUserName(e.target.value)}
             id="fname"
             name="name"
