@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import 'firebase/auth'
 import 'firebase/firebase'
+import 'firebase/storage'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
