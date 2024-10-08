@@ -17,20 +17,35 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    firebase.auth().createUserWithEmailAndPassword(email,password).then((result=>{
-      result.user.updateProfile({displayName:username}).then(()=>{
-        firebase.firestore().collection('user').add({
-          id:result.user.uid,
-          userName:username,
-          phone:phone
-        }).then(()=>{
-          history.push("/login")
-        }).catch((error)=>{
-          alert(error.message)
-        })
+  
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((result) => {
+
+        return result.user.updateProfile({ displayName: username });
       })
-    }))
+      .then(() => {
+
+        return firebase.firestore().collection('user').add({
+          id: firebase.auth().currentUser.uid,
+          userName: username,
+          phone: phone
+        });
+      })
+      .then(() => {
+
+        setUserName('');
+        setEmail('');
+        setPhone('');
+        setPassword('');
+        history.push("/login");
+      })
+      .catch((error) => {
+        
+        console.error("Error during sign up:", error);
+        alert(error.message);
+      });
   };
+  
   
   
 
